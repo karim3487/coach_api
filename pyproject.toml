@@ -1,0 +1,59 @@
+[project]
+name = "coach-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django==4.2.20",
+    "django-debug-toolbar>=5.1.0",
+    "djangorestframework>=3.16.0",
+    "drf-spectacular>=0.28.0",
+    "psycopg[binary]>=3.2.6",
+    "python-decouple>=3.8",
+]
+
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  \.venv
+ |migrations
+ |static
+)/
+'''
+
+[tool.isort]
+profile = "black"
+force-sort-within-sections = true
+combine-as-imports = true
+known_first_party = ["apps"]
+skip = ["migrations", "static"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+
+
+[tool.ruff.lint]
+select = ["A", "B", "C4", "E", "F", "I", "DJ", "INP", "TID", "UP", "YTT"]
+ignore = ["D101", "D102", "D103", "D105", "D106", "F403", "F405"]
+fixable = ["A", "B", "C4", "E", "F", "I", "TID", "UP"]
+exclude = [
+    ".git", ".github", ".ruff_cache", ".venv", "__pypackages__",
+    "build", "dist", "migrations", "node_modules", "static"
+]
+dummy-variable-rgx = "^(_+|(_+[A-Za-z0-9_]*[A-Za-z0-9]+?))$"
+mccabe = { "max-complexity" = 10 }
+
+[tool.ruff.lint.per-file-ignores]
+"apps/api/**/*.py" = []
+"*/choices.py" = ["D101", "D106"]
+"*/admin.py" = ["D101", "F403", "F405"]
+"*/apps.py" = ["D101"]
+"**/migrations/*.py" = ["E501"]
+"config/settings/*.py" = ["E501"]
