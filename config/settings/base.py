@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "apps.programs",
     "apps.profiles",
     "apps.workouts",
-    "apps.api.v1",
 ]
 
 MIDDLEWARE = [

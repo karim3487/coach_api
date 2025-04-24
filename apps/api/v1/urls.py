@@ -1,8 +1,14 @@
-from django.urls import path
-
-from . import views
+from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
-    path("hello/", views.hello_world, name="hello"),
-    path("", views.api_root, name="api-root"),
+    # drf-spectacular
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    # profiles
+    path("profiles/", include("apps.api.v1.profiles.urls")),
 ]

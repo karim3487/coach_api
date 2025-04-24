@@ -2,10 +2,11 @@ from django.db import models
 from django.utils.text import slugify
 
 from apps.common.choices import DifficultyLevel, ExerciseType
+from apps.common.models import TimeStampedModel
 from apps.exercises.models import Exercise
 
 
-class Workout(models.Model):
+class Workout(TimeStampedModel):
     name = models.CharField(max_length=100, help_text="Name of the workout session")
     slug = models.SlugField(max_length=100, unique=True)
     category = models.CharField(

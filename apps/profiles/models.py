@@ -3,10 +3,11 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from apps.common.choices import TrainingLocation
-from apps.profiles.choices import Gender
+from apps.common.models import TimeStampedModel
+from apps.profiles.choices import Contraindication, Gender
 
 
-class Goal(models.Model):
+class Goal(TimeStampedModel):
     name = models.CharField(
         max_length=50,
         help_text="Name of the fitness goal (e.g. weight loss, muscle gain)",
@@ -30,10 +31,7 @@ class Goal(models.Model):
         super().save(*args, **kwargs)
 
 
-class ClientProfile(models.Model):
-    telegram_id = models.BigIntegerField(
-        unique=True, help_text="Telegram chat ID (used for sending notifications)"
-    )
+class ClientProfile(TimeStampedModel):
     name = models.CharField(max_length=100, help_text="Full name or nickname")
     age = models.PositiveIntegerField(help_text="User's age in years")
     weight = models.DecimalField(
@@ -45,8 +43,10 @@ class ClientProfile(models.Model):
     gender = models.CharField(
         max_length=10, choices=Gender.choices, help_text="Gender of the user"
     )
-    contraindications = models.TextField(
-        blank=True, help_text="Medical limitations or injuries (free text)"
+    contraindications = models.CharField(
+        blank=True,
+        choices=Contraindication.choices,
+        help_text="Medical limitations or injuries (free text)",
     )
     goal = models.ForeignKey(
         "Goal",
@@ -73,9 +73,36 @@ class ClientProfile(models.Model):
         verbose_name = "Client Profile"
         verbose_name_plural = "Client Profiles"
         ordering = ["-created_at"]
-        indexes = [
-            models.Index(fields=["telegram_id"]),
-        ]
 
     def __str__(self):
-        return f"{self.name} ({self.telegram_id})"
+        return f"{self.name} ({self.telegram_ids.count()} tg-ids)"
+
+
+class TelegramID(models.Model):
+    profile = models.ForeignKey(
+        "ClientProfile", on_delete=models.CASCADE, related_name="telegram_ids"
+    )
+    telegram_id = models.BigIntegerField(unique=True)
+
+    def __str__(self):
+        return f"tg:{self.telegram_id} -> {self.profile.name}"
+
+
+class BackupCode(models.Model):
+    profile = models.ForeignKey(
+        "ClientProfile", on_delete=models.CASCADE, related_name="backup_codes"
+    )
+    code_hash = models.CharField(max_length=128, unique=True)
+    salt = models.CharField(max_length=32)
+    used_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.profile.name} ({self.code_hash[:10]})"
+
+    def is_used(self):
+        return self.used_at is not None
+
+    def mark_used(self):
+        self.used_at = timezone.now()
+        self.save()

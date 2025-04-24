@@ -1,7 +1,9 @@
 from django.db import models
 
+from apps.common.models import TimeStampedModel
 
-class Plan(models.Model):
+
+class Plan(TimeStampedModel):
     client_profile = models.ForeignKey(
         "profiles.ClientProfile",
         on_delete=models.CASCADE,
@@ -41,7 +43,7 @@ class Plan(models.Model):
         )
 
 
-class Schedule(models.Model):
+class Schedule(TimeStampedModel):
     plan = models.ForeignKey(
         Plan,
         on_delete=models.CASCADE,
@@ -76,7 +78,7 @@ class Schedule(models.Model):
         return f"{self.plan.client_profile.name} - {self.date} at {self.time}"
 
 
-class Progress(models.Model):
+class Progress(TimeStampedModel):
     client_profile = models.ForeignKey(
         "profiles.ClientProfile",
         on_delete=models.CASCADE,

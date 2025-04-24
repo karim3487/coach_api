@@ -2,10 +2,11 @@ from django.db import models
 from django.utils.text import slugify
 
 from apps.common.choices import DifficultyLevel, TrainingLocation
+from apps.common.models import TimeStampedModel
 from apps.workouts.models import Workout
 
 
-class Program(models.Model):
+class Program(TimeStampedModel):
     name = models.CharField(max_length=100, help_text="Name of the training program")
     slug = models.SlugField(max_length=100, unique=True)
     goal = models.ForeignKey(
@@ -51,7 +52,7 @@ class Program(models.Model):
         super().save(*args, **kwargs)
 
 
-class ProgramWorkout(models.Model):
+class ProgramWorkout(TimeStampedModel):
     program = models.ForeignKey(
         Program, on_delete=models.CASCADE, help_text="Program this workout is part of"
     )
