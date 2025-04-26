@@ -4,7 +4,7 @@ from django.utils.text import slugify
 
 from apps.common.choices import TrainingLocation
 from apps.common.models import TimeStampedModel
-from apps.profiles.choices import Contraindication, Gender
+from apps.profiles.choices import Gender
 
 
 class Goal(TimeStampedModel):
@@ -43,10 +43,10 @@ class ClientProfile(TimeStampedModel):
     gender = models.CharField(
         max_length=10, choices=Gender.choices, help_text="Gender of the user"
     )
-    contraindications = models.CharField(
-        blank=True,
-        choices=Contraindication.choices,
-        help_text="Medical limitations or injuries (free text)",
+    contraindications = models.JSONField(
+        default=list,
+        help_text="Medical limitations or injuries"
+        "(e.g. ['heart_disease', 'asthma'])",
     )
     goal = models.ForeignKey(
         "Goal",
@@ -65,9 +65,6 @@ class ClientProfile(TimeStampedModel):
         "(e.g. ['mon', 'wed', 'fri'])",
     )
     preferred_time = models.TimeField(help_text="Preferred daily training time")
-    created_at = models.DateTimeField(
-        default=timezone.now, help_text="Date of registration"
-    )
 
     class Meta:
         verbose_name = "Client Profile"
