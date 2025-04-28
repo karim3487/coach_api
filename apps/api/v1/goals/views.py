@@ -7,7 +7,7 @@ from apps.api.v1.goals.serializers import GoalSerializer
 from apps.profiles.models import Goal
 
 
-class GoalViewSet(viewsets.ModelViewSet):
+class GoalViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
 

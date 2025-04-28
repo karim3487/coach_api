@@ -57,3 +57,8 @@ mccabe = { "max-complexity" = 10 }
 "*/apps.py" = ["D101"]
 "**/migrations/*.py" = ["E501"]
 "config/settings/*.py" = ["E501"]
+
+[dependency-groups]
+dev = [
+    "requests>=2.32.3",
+]

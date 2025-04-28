@@ -2,20 +2,20 @@ from django.db import models
 
 
 class ExerciseType(models.TextChoices):
-    STRENGTH = "strength", "Strength"
-    CARDIO = "cardio", "Cardio"
-    STRETCHING = "stretching", "Stretching"
-    YOGA = "yoga", "Yoga"
-    MIXED = "mixed", "Mixed"
+    STRENGTH = "strength", "Сила"
+    CARDIO = "cardio", "Кардио"
+    STRETCHING = "stretching", "Растяжка"
+    YOGA = "yoga", "Йога"
+    MIXED = "mixed", "Смешанное"
 
 
 class DifficultyLevel(models.TextChoices):
-    BEGINNER = "beginner", "Beginner"
-    INTERMEDIATE = "intermediate", "Intermediate"
-    ADVANCED = "advanced", "Advanced"
+    BEGINNER = "beginner", "Новичок"
+    INTERMEDIATE = "intermediate", "Средний"
+    ADVANCED = "advanced", "Продвинутый"
 
 
 class TrainingLocation(models.TextChoices):
-    GYM = "gym", "Gym"
-    HOME = "home", "Home"
-    OUTDOORS = "outdoors", "Outdoors"
+    GYM = "gym", "Зал"
+    HOME = "home", "Дом"
+    OUTDOORS = "outdoors", "Улица"
