@@ -1,10 +1,13 @@
 from django.contrib import admin
 
-from apps.common.admin import DeletedAtFilter, SoftDeleteAdmin
+from apps.common.admin import DeletedAtFilter, SoftDeleteAdmin, TimeStampedAdmin
 from apps.programs.models import Program, ProgramWorkout
 
 
 class ProgramWorkoutInline(admin.TabularInline):
+    readonly_fields = [
+        "deleted_at",
+    ]
     model = ProgramWorkout
     extra = 1
 
@@ -27,6 +30,6 @@ class ProgramAdmin(SoftDeleteAdmin):
 
 
 @admin.register(ProgramWorkout)
-class ProgramWorkoutAdmin(SoftDeleteAdmin):
+class ProgramWorkoutAdmin(SoftDeleteAdmin, TimeStampedAdmin):
     list_display = ("program", "workout", "week_number", "day_number")
     list_filter = ("program", DeletedAtFilter)

@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.contrib.postgres.search import (
+    TrigramSimilarity,
+)
 from django.utils.html import format_html
 
 from apps.exercises.models import Exercise
@@ -17,6 +20,20 @@ class ExerciseAdmin(admin.ModelAdmin):
     list_filter = ("type", "muscle_group", "equipment", "difficulty")
     search_fields = ("name",)
     list_editable = ("type", "muscle_group", "equipment", "difficulty")
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super().get_search_results(
+            request, queryset, search_term
+        )
+        if search_term:
+            queryset = (
+                queryset.annotate(
+                    similarity=TrigramSimilarity("name", search_term),
+                )
+                .filter(similarity__gt=0.1)
+                .order_by("-similarity")
+            )
+        return queryset, use_distinct
 
     def media_preview(self, obj):
         if obj.media_url:

@@ -32,11 +32,12 @@ class Exercise(models.Model):
     media_url = models.URLField(
         blank=True, help_text="Link to a demo video or image (optional)"
     )
+    media_file = models.FileField(upload_to="exercises/", null=True, blank=True)
 
     class Meta:
         verbose_name = "Exercise"
         verbose_name_plural = "Exercises"
-        ordering = ["name"]
+        # ordering = ["name"]
         indexes = [
             models.Index(fields=["type"]),
             models.Index(fields=["muscle_group"]),

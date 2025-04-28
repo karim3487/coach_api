@@ -8,7 +8,8 @@ from apps.workouts.models import Workout, WorkoutExercise
 class WorkoutExerciseInline(admin.TabularInline):
     model = WorkoutExercise
     extra = 1
-    autocomplete_fields = ("exercise",)
+    # autocomplete_fields = ("exercise",)
+    raw_id_fields = ("exercise",)
     readonly_fields = ("exercise_preview",)
     fields = (
         "exercise_preview",
@@ -53,9 +54,10 @@ class WorkoutAdmin(SoftDeleteAdmin):
 @admin.register(WorkoutExercise)
 class WorkoutExerciseAdmin(admin.ModelAdmin):
     autocomplete_fields = (
-        "exercise",
+        # "exercise",
         "workout",
     )
+    raw_id_fields = ("exercise",)
     list_display = ("workout", "exercise", "order", "sets", "reps", "duration")
     list_filter = ("workout",)
     readonly_fields = ("exercise_preview",)
