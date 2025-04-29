@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework",
     "storages",
+    "django_filters",
     # My Apps
     "apps.exercises",
     "apps.plans",

@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 
 from apps.api.v1.backup_codes import serializers
 from apps.profiles import exceptions
-from apps.profiles.models import ClientProfile
 from apps.profiles.services.backup_code_service import BackupCodeService
 
 
@@ -38,16 +37,10 @@ class GenerateBackupCodesView(APIView):
         telegram_id = serializer.validated_data["telegram_id"]
 
         service = BackupCodeService()
-        try:
-            codes = service.generate_by_tg_id(
-                telegram_id=telegram_id,
-                count=serializer.validated_data["count"],
-            )
-        except ClientProfile.DoesNotExist:
-            return Response(
-                {"detail": f"Client with Telegram ID = {telegram_id} does not exists"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+        codes = service.generate_by_tg_id(
+            telegram_id=telegram_id,
+            count=serializer.validated_data["count"],
+        )
         return Response(codes)
 
 

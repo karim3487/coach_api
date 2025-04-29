@@ -44,7 +44,7 @@ class WorkoutExerciseReadSerializer(serializers.ModelSerializer):
         ]
 
 
-class WorkoutExerciseWriteSerializer(serializers.ModelSerializer):
+class WorkoutExerciseCreateSerializer(serializers.ModelSerializer):
     exercise_id = serializers.PrimaryKeyRelatedField(
         queryset=Exercise.objects.all(),
         source="exercise",
@@ -65,7 +65,7 @@ class WorkoutExerciseWriteSerializer(serializers.ModelSerializer):
 
 
 class WorkoutSerializer(serializers.ModelSerializer):
-    exercises = WorkoutExerciseWriteSerializer(many=True, write_only=True)
+    exercises = WorkoutExerciseCreateSerializer(many=True, write_only=True)
     exercises_list = WorkoutExerciseReadSerializer(
         source="workoutexercise_set", many=True, read_only=True
     )
@@ -115,3 +115,9 @@ class WorkoutSerializer(serializers.ModelSerializer):
             )
 
         return instance
+
+
+class SimpleWorkoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workout
+        fields = ["id", "name", "duration_est"]

@@ -17,3 +17,29 @@ class CustomPagination(PageNumberPagination):
                 "results": data,
             }
         )
+
+    def get_paginated_response_schema(self, schema):
+        """
+        Override default schema for pagination in drf-spectacular.
+        """
+        return {
+            "type": "object",
+            "properties": {
+                "total_items": {"type": "integer", "example": 42},
+                "total_pages": {"type": "integer", "example": 5},
+                "current_page": {"type": "integer", "example": 2},
+                "next": {
+                    "type": "string",
+                    "format": "uri",
+                    "nullable": True,
+                    "example": "http://.../page=3",
+                },
+                "previous": {
+                    "type": "string",
+                    "format": "uri",
+                    "nullable": True,
+                    "example": "http://.../page=1",
+                },
+                "results": schema,
+            },
+        }

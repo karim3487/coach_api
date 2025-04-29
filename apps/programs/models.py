@@ -51,6 +51,13 @@ class Program(TimeStampedModel):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    def get_workouts_in_order(self) -> list:
+        """Return list of Workouts ordered by week and day."""
+        return [
+            pw.workout
+            for pw in self.programworkout_set.order_by("week_number", "day_number")
+        ]
+
 
 class ProgramWorkout(TimeStampedModel):
     program = models.ForeignKey(

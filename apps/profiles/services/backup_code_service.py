@@ -1,8 +1,6 @@
 import hashlib
 import secrets
 
-from rest_framework.generics import get_object_or_404
-
 from apps.profiles import exceptions
 from apps.profiles.models import BackupCode, ClientProfile, TelegramID
 
@@ -19,9 +17,7 @@ class BackupCodeService:
         return raw_codes
 
     def generate_by_tg_id(self, telegram_id: int, count: int = 10) -> list[str]:
-        profile = get_object_or_404(
-            ClientProfile.objects.get(telegram_ids__telegram_id=telegram_id)
-        )
+        profile = ClientProfile.objects.get(telegram_ids__telegram_id=telegram_id)
         return self.generate_codes(profile, count)
 
     def consume_code(self, raw_code: str) -> BackupCode:
