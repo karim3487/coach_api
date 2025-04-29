@@ -6,8 +6,6 @@ from datetime import date, time, timedelta
 from django.conf import settings
 from g4f import Client
 
-from apps.plans import exceptions
-from apps.plans.choices import PlanStatus
 from apps.plans.models import Plan, Schedule
 from apps.plans.services.plans import PlanService
 from apps.profiles.models import ClientProfile
@@ -42,10 +40,6 @@ class AIPlanService:
 
     @classmethod
     def create_plan(cls, client: ClientProfile, start_date: date | None = None) -> Plan:
-        if Plan.objects.filter(
-            client_profile=client, status=PlanStatus.ACTIVE
-        ).exists():
-            raise exceptions.ActivePlanExists("User already has an active plan.")
 
         start_date = PlanService.get_nearest_available_date(
             client.available_days, start_date

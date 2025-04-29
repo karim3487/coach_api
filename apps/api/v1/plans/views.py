@@ -10,8 +10,8 @@ from apps.plans import models
 from apps.plans.choices import PlanStatus
 from apps.plans.exceptions import ActivePlanExists
 from apps.plans.models import Plan
-from apps.plans.services.ai_plans import AIPlanService
 from apps.plans.services.plans import PlanService
+from apps.plans.tasks import create_ai_plan_task
 from apps.profiles.models import ClientProfile
 from apps.programs.models import Program
 
@@ -87,8 +87,10 @@ class CreateAIPlanByProfileView(BaseCreatePlanView):
         profile = get_object_or_404(
             ClientProfile, id=serializer.validated_data["profile_id"]
         )
-        return self._create_plan_with_handling(
-            AIPlanService.create_plan, client=profile
+        task = create_ai_plan_task.delay(profile.id)
+        return Response(
+            {"detail": "Plan creation started.", "task_id": task.id},
+            status=status.HTTP_202_ACCEPTED,
         )
 
 
@@ -102,8 +104,18 @@ class CreateAIPlanByTelegramView(BaseCreatePlanView):
             ClientProfile,
             telegram_ids__telegram_id=serializer.validated_data["telegram_id"],
         )
-        return self._create_plan_with_handling(
-            AIPlanService.create_plan, client=profile
+
+        if Plan.objects.filter(
+            client_profile=profile, status=PlanStatus.ACTIVE
+        ).exists():
+            raise ValidationError(
+                {"detail": "User already has an active training plan."}
+            )
+
+        task = create_ai_plan_task.delay(profile.id)
+        return Response(
+            {"detail": "Plan creation started.", "task_id": task.id},
+            status=status.HTTP_202_ACCEPTED,
         )
 
 
@@ -121,6 +133,14 @@ class CreatePlanFromProgramByProfileView(BaseCreatePlanView):
         profile = get_object_or_404(
             ClientProfile, id=serializer.validated_data["profile_id"]
         )
+
+        if Plan.objects.filter(
+            client_profile=profile, status=PlanStatus.ACTIVE
+        ).exists():
+            raise ValidationError(
+                {"detail": "User already has an active training plan."}
+            )
+
         program = get_object_or_404(Program, id=serializer.validated_data["program_id"])
 
         return self._create_plan_with_handling(
