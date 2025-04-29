@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from apps.common.admin import DeletedAtFilter, SoftDeleteAdmin
+from apps.common.admin import DeletedAtFilter, SoftDeleteAdmin, TimeStampedAdmin
 from apps.profiles.models import *
 
 
 @admin.register(ClientProfile)
-class ClientProfileAdmin(SoftDeleteAdmin):
+class ClientProfileAdmin(SoftDeleteAdmin, TimeStampedAdmin):
     list_display = (
         "name",
         "age",
@@ -19,7 +19,7 @@ class ClientProfileAdmin(SoftDeleteAdmin):
 
 
 @admin.register(Goal)
-class GoalAdmin(SoftDeleteAdmin):
+class GoalAdmin(SoftDeleteAdmin, TimeStampedAdmin):
     list_display = ("name", "is_deleted")
     search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}

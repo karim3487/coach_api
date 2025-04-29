@@ -1,14 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from apps.common.admin import DeletedAtFilter, SoftDeleteAdmin
+from apps.common.admin import DeletedAtFilter, SoftDeleteAdmin, TimeStampedAdmin
 from apps.workouts.models import Workout, WorkoutExercise
 
 
 class WorkoutExerciseInline(admin.TabularInline):
     model = WorkoutExercise
     extra = 1
-    # autocomplete_fields = ("exercise",)
     raw_id_fields = ("exercise",)
     readonly_fields = ("exercise_preview",)
     fields = (
@@ -43,7 +42,7 @@ class WorkoutExerciseInline(admin.TabularInline):
 
 
 @admin.register(Workout)
-class WorkoutAdmin(SoftDeleteAdmin):
+class WorkoutAdmin(SoftDeleteAdmin, TimeStampedAdmin):
     list_display = ("name", "category", "goal", "level", "duration_est", "active")
     list_filter = ("category", "goal", "level", "active", DeletedAtFilter)
     search_fields = ("name",)

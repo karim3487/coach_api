@@ -13,7 +13,7 @@ class ProgramWorkoutInline(admin.TabularInline):
 
 
 @admin.register(Program)
-class ProgramAdmin(SoftDeleteAdmin):
+class ProgramAdmin(SoftDeleteAdmin, TimeStampedAdmin):
     list_display = (
         "name",
         "goal",
