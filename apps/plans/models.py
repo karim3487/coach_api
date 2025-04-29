@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.common.models import TimeStampedModel
+from apps.plans.choices import PlanStatus
 
 
 class Plan(TimeStampedModel):
@@ -25,7 +26,8 @@ class Plan(TimeStampedModel):
     end_date = models.DateField(help_text="End date of the plan")
     status = models.CharField(
         max_length=20,
-        default="active",
+        choices=PlanStatus.choices,
+        default=PlanStatus.ACTIVE,
         help_text="Plan status: active, completed, or cancelled",
     )
     progress_percent = models.PositiveIntegerField(
@@ -36,6 +38,14 @@ class Plan(TimeStampedModel):
         verbose_name = "Training Plan"
         verbose_name_plural = "Training Plans"
         ordering = ["-start_date"]
+
+    def mark_completed(self):
+        self.status = PlanStatus.COMPLETED
+        self.save(update_fields=["status"])
+
+    def cancel(self):
+        self.status = PlanStatus.CANCELLED
+        self.save(update_fields=["status"])
 
     def __str__(self):
         return (
