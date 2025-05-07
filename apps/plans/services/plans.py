@@ -35,6 +35,7 @@ class PlanService:
             program=program,
             goal=client.goal,
             start_date=start_date,
+            end_date=date.today() + timedelta(days=3),
             status=PlanStatus.ACTIVE,
             progress_percent=0,
         )

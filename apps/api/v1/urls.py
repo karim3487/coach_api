@@ -26,5 +26,7 @@ urlpatterns = [
     path("exercises/", include("apps.api.v1.exercises.urls")),
     path("plans/", include("apps.api.v1.plans.urls")),
     path("programs/", include("apps.api.v1.programs.urls")),
-    path("", include("apps.api.v1.workouts.urls")),  # workouts
+    path("progress/", include("apps.api.v1.progress.urls")),
+    path("schedules/", include("apps.api.v1.schedule.urls")),
+    path("workouts/", include("apps.api.v1.workouts.urls")),  # workouts
 ]

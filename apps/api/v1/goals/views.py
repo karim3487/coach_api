@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework import status, viewsets
+from rest_framework import viewsets
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -18,11 +19,5 @@ class GoalViewSet(viewsets.ReadOnlyModelViewSet):
 )
 class GoalBySlugView(APIView):
     def get(self, request, slug):
-        try:
-            goal = Goal.objects.get(slug=slug)
-        except Goal.DoesNotExist:
-            return Response(
-                {"detail": "Goal not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-
+        goal = get_object_or_404(Goal, slug=slug)
         return Response(GoalSerializer(goal).data)

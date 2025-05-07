@@ -1,23 +1,9 @@
 from rest_framework import serializers
 
-from apps.plans.models import Plan, Schedule
+from apps.api.v1.schedule.serializers import ScheduleSerializer
+from apps.plans.models import Plan
 from apps.profiles.models import ClientProfile
 from apps.programs.models import Program
-
-
-class ScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Schedule
-        fields = (
-            "id",
-            "date",
-            "time",
-            "workout",
-            "day_number",
-            "completed",
-            "completed_at",
-            "notes",
-        )
 
 
 class PlanSerializer(serializers.ModelSerializer):
