@@ -121,13 +121,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "/static/"
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -163,3 +158,7 @@ AWS_STORAGE_BUCKET_NAME = "coach-media"
 AWS_S3_ENDPOINT_URL = "http://localhost:9000"
 AWS_S3_REGION_NAME = "us-east-1"
 AWS_QUERYSTRING_AUTH = False
+
+# Celery
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"

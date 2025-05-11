@@ -1,13 +1,71 @@
+version: "3.8"
 services:
-  minio:
-    image: minio/minio
-    container_name: minio
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: django
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: coach_bot
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
-    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
     volumes:
-      - /data
+      - minio_data:/data
+    networks:
+      - backend
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uv run uvicorn config.asgi:application --host 0.0.0.0 --port 8000
+    env_file:
+      - .env.prod
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - minio
+    networks:
+      - backend
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+  celery:
+    build:
+      context: .
+    command: uv run celery -A config worker --loglevel=info
+    depends_on:
+      - web
+      - redis
+    env_file:
+      - .env
+    networks:
+      - backend
+
+volumes:
+  db_data:
+  minio_data:
+
+networks:
+  backend:
+    driver: bridge

@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from apps.api.v1.plans import schemas, serializers
 from apps.plans import models
 from apps.plans.choices import PlanStatus
-from apps.plans.exceptions import ActivePlanExists
+from apps.plans.exceptions import ActivePlanExists, NoWorkoutsInProgram
 from apps.plans.models import Plan
 from apps.plans.services.plans import PlanService
 from apps.plans.tasks import create_ai_plan_task
@@ -75,6 +75,10 @@ class BaseCreatePlanView(APIView):
         except ActivePlanExists as ex:
             raise ValidationError(
                 {"detail": "User already has an active training plan."}
+            ) from ex
+        except NoWorkoutsInProgram as ex:
+            raise ValidationError(
+                {"detail": "Program has no workouts to assign."}
             ) from ex
 
 

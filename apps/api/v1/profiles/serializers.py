@@ -20,14 +20,12 @@ class ClientProfileSerializer(serializers.ModelSerializer):
 
 
 class ClientProfileShortSerializer(serializers.ModelSerializer):
-    telegram_id = serializers.IntegerField(write_only=True)
-    goal = serializers.SerializerMethodField()
+    goal = GoalSerializer(read_only=True)
 
     class Meta:
         model = models.ClientProfile
         exclude = (
             "id",
-            # "contraindications",
             "created_at",
             "updated_at",
             "deleted_at",

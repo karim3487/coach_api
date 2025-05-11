@@ -41,7 +41,7 @@ class Command(BaseCommand):
 
                     # Update exercise.media_url to new stable path
                     new_url = default_storage.url(new_path)
-                    exercise.media_url = new_url
+                    exercise.media_url = new_url.replace("minio", "localhost")
                     exercise.save(update_fields=["media_url"])
 
                     self.stdout.write(f"✅ Migrated: {exercise.name}")

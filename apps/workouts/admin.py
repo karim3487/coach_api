@@ -37,8 +37,8 @@ class WorkoutExerciseInline(admin.TabularInline):
 
     exercise_preview.short_description = "Упражнение (GIF)"
 
-    class Media:
-        css = {"all": ("admin/custom_admin.css",)}
+    # class Media:
+    #     css = {"all": ("admin/custom_admin.css",)}
 
 
 @admin.register(Workout)
