@@ -2,7 +2,7 @@ from config.settings.dev import *  # noqa: F403
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "host.docker.internal"]
 
 # Email
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
