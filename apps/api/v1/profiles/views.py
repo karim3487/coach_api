@@ -53,7 +53,7 @@ class ClientProfileViewSet(viewsets.ModelViewSet):
 
     @extend_schema(
         request=serializers.ClientProfileUpsertSerializer,
-        responses={200: serializers.ClientProfileUpsertSerializer},
+        responses={200: serializers.ClientProfileSerializer},
         description="Create or update ClientProfile by telegram_id",
     )
     @action(detail=False, methods=["post"], url_path="upsert")
@@ -76,7 +76,7 @@ class ClientProfileViewSet(viewsets.ModelViewSet):
             )
             status_code = status.HTTP_201_CREATED
 
-        response_serializer = serializers.ClientProfileUpsertSerializer(updated_profile)
+        response_serializer = serializers.ClientProfileSerializer(updated_profile)
         return Response(response_serializer.data, status=status_code)
 
     @extend_schema(
