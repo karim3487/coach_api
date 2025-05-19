@@ -6,13 +6,8 @@ urlpatterns = [
     path("", views.ProgressListView.as_view(), name="progress-list"),
     path(
         "by-telegram/",
-        views.ProgressListByTelegramView.as_view(),
-        name="progress-list-by-telegram",
+        views.ProgressByTelegramView.as_view(),
+        name="progress-by-telegram",
     ),
     path("", views.ProgressCreateView.as_view(), name="progress-create"),
-    path(
-        "by-telegram/",
-        views.ProgressCreateByTelegramView.as_view(),
-        name="progress-create-by-telegram",
-    ),
 ]
